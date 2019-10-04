@@ -1,11 +1,10 @@
 import React from 'react';
-import ChatsList from './Components/ChatsList';
+import ChatsListScreen from './Components/ChatsListScreen';
 
 const App: React.FC = () => {
 	return (
 		<div>
-			<div>WhatsApp Clone</div>
-			<ChatsList />
+			<ChatsListScreen />
 		</div>
 	);
 }
