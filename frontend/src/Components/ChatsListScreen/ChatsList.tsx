@@ -58,7 +58,7 @@ font-size : 13px;
 const ChatsList = () => {
     const [chats, setChats] = useState<any[]>([]);
     useMemo(async () => {
-        const body = await fetcj(`${process.env.REACT_APP_SERVER_URL}/chats`);
+        const body = await fetch(`${process.env.REACT_APP_SERVER_URL}/chats`);
         const chats = await body.json();
         setChats(chats);
     }, []);

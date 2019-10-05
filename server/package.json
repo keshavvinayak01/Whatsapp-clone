@@ -11,7 +11,9 @@
 	"author": "Keshav Vinayak Jha",
 	"license": "ISC",
 	"dependencies": {
+		"@types/cors": "^2.8.6",
 		"@types/node": "^12.7.11",
+		"cors": "^2.8.5",
 		"express": "^4.17.1",
 		"prettier": "^1.18.2",
 		"ts-node": "^8.4.1",
