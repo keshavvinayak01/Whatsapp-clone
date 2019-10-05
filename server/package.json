@@ -5,13 +5,15 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "ts-node index.js"
+		"start": "ts-node index.ts",
+		"format": "prettier \"**/*.ts\" --write"
 	},
 	"author": "Keshav Vinayak Jha",
 	"license": "ISC",
 	"dependencies": {
 		"@types/node": "^12.7.11",
 		"express": "^4.17.1",
+		"prettier": "^1.18.2",
 		"ts-node": "^8.4.1",
 		"typescript": "^3.6.3"
 	}
