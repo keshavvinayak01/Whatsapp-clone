@@ -13,6 +13,7 @@
 	"dependencies": {
 		"@types/cors": "^2.8.6",
 		"@types/graphql": "^14.5.0",
+		"@types/jest": "^24.0.18",
 		"@types/node": "^12.7.11",
 		"apollo-server-express": "^2.9.5",
 		"cors": "^2.8.5",
@@ -21,7 +22,9 @@
 		"graphql-import": "^0.7.1",
 		"graphql-scalars": "^1.0.2",
 		"graphql-tools": "^4.0.5",
+		"jest": "^24.9.0",
 		"prettier": "^1.18.2",
+		"ts-jest": "^24.1.0",
 		"ts-node": "^8.4.1",
 		"typescript": "^3.6.3"
 	}
