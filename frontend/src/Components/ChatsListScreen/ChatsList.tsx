@@ -94,16 +94,19 @@ const ChatsList = () => {
                 {
                     chats.map(chat => (
                         <StyledListItem key={chat.id} button>
-                            <ChatPicture src={chat.picture} alt="Profile">
+                            <ChatPicture 
+                            src={chat.picture} 
+                            alt="Profile"
+                            data-testid="picture" >
                                 <ChatInfo>
-                                    <ChatName>{chat.name}</ChatName>
+                                    <ChatName data-testid="name">{chat.name}</ChatName>
                                     {
                                         chat.lastMessage && (
                                             <>
-                                                <MessageContent>
+                                                <MessageContent data-testid="content" >
                                                     {chat.lastMessage.content}
                                                 </MessageContent>
-                                                <MessageDate>
+                                                <MessageDate data-testid="date">
                                                     {moment(chat.lastMessage.createdAt).format('HH:mm')}
                                                 </MessageDate>
                                             </>
