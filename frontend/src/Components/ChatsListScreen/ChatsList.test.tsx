@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom'
-import { cleanup, render, waitforDomChange, waitForDomChange } from '@testing-library/react';
+import { cleanup, render, waitForDomChange } from '@testing-library/react';
 import ChatsList from './ChatsList';
 
 describe('ChatsList', () => {
@@ -37,9 +37,6 @@ describe('ChatsList', () => {
             expect(getByTestId('content')).toHaveTextContent('Hello');
             expect(getByTestId('date')).toHaveTextContent('02:00')
         }
-    })
-
-
-
-})
+    });
+});
 
