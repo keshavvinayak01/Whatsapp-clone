@@ -10,8 +10,8 @@ const App: React.FC = () => {
 			<AnimatedSwitch>
 				<Route exact path="/chats" component={ChatsListScreen} />
 				<Route exact path="/chats/:chatId"
-				component={({ match } : RouteComponentProps<{ chatId : string }>) => (
-					<ChatRoomScreen chatId={ match.params.chatId } />
+				component={({ match, history } : RouteComponentProps<{ chatId : string }>) => (
+					<ChatRoomScreen chatId={ match.params.chatId } history={history} />
 				)} />
 			</AnimatedSwitch>
 			<Route exact path="/" render={redirectToChats} />
