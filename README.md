@@ -1,6 +1,6 @@
-### A WhatsApp like messaging Web Application
+# A WhatsApp like messaging Web Application
 
-*Stack used :*
+## Stack used :
 
 1. React/Redux
 2. GraphQL
@@ -10,7 +10,7 @@
 6. Postgres
 7. WebSockets
 
-### Steps performed:
+## Steps performed:
 
 - [x] Initialize create-react-app
 - [x] Styling components( material-ui)
