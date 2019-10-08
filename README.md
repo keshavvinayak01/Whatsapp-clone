@@ -1,8 +1,8 @@
-# A WhatsApp like messaging Web Application
+# :boom: :boom: A WhatsApp like messaging Web Application :boom: :boom:
 
 [![ForTheBadge uses-js](http://ForTheBadge.com/images/badges/uses-js.svg)](http://ForTheBadge.com) [![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/Naereen/)
 
-## Stack used :
+## Stack used : :sweat_drops: :scroll:
 
 1. React/Redux
 2. GraphQL
@@ -12,7 +12,7 @@
 6. Postgres
 7. WebSockets
 
-## Steps performed:
+## Steps performed: :scroll:
 
 - [x] Initialize create-react-app
 - [x] Styling components( material-ui)
