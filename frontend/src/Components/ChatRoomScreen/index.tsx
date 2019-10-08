@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 import React from 'react';
 import { useCallback } from 'react';
-import { useApolloClient, useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 import styled from 'styled-components';
 import ChatNavbar from './ChatNavbar';
 import MessageInput from './MessageInput';
@@ -29,6 +29,18 @@ const getChatQuery = gql`
         }
     }
 `;
+
+const addMessageMutation = gql`
+    mutation AddMessage($chatId : ID!, $content : String!){
+        addMessage(chatId : $chatId, content : $content){
+            id
+            content
+            createdAt
+        }
+    }
+`;
+
+
 interface ChatRoomScreenParams {
     chatId : string;
     history : History;
@@ -50,36 +62,44 @@ export interface ChatQueryResult {
 type OptionalChatQueryResult = ChatQueryResult | null;
 
 const ChatRoomScreen : React.FC<ChatRoomScreenParams> = ({ history, chatId }) => {
-    const client = useApolloClient();
     const {
         data : {chat},
     } = useQuery<any>(getChatQuery, {
         variables : { chatId },
     });
+
+    const [addMessage] = useMutation(addMessageMutation);
        
     const onSendMessage = useCallback(
         (content : string) => {
-            if (!chat) return null;
-
-            const message = {
-                id : (chat.messages.length + 10).toString(),
-                createdAt : new Date(),
-                content,
-                __typename : 'Chat'
-            };
-            
-            client.writeQuery({
-                query : getChatQuery,
-                variables : { chatId },
-                data : {
-                    chat : {
-                        ...chat,
-                        messages : chat.messages.concat(message),
+            addMessage({
+                variables: { chatId, content },
+                optimisticResponse: {
+                    __typename : 'Mutation',
+                    addMessage: {
+                        __typename : 'Message',
+                        id : Math.random().toString(36).substr(2,9),
+                        createdAt : new Date(),
+                        content,
                     },
                 },
-            });
+                update: (client, { data }) => {
+                    if(data && data.addMessage) {
+                        client.writeQuery({
+                            query : getChatQuery,
+                            variables : { chatId },
+                            data : {
+                                chat : {
+                                    ...chat,
+                                    messages: chat.messages.concat(data.addMessage),
+                                },
+                            },
+                        });
+                    }
+                }
+            })
         },
-        [chat, chatId, client]
+        [chat, chatId, addMessage]
     );    
     
     if(!chat) return null;
