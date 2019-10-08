@@ -2,7 +2,7 @@
 
 [![ForTheBadge uses-js](http://ForTheBadge.com/images/badges/uses-js.svg)](http://ForTheBadge.com) [![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/Naereen/)
 
-## Stack used : :sweat_drops: :scroll:
+## Stack used : :sweat_drops:
 
 1. React/Redux
 2. GraphQL
