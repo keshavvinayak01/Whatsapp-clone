@@ -3,7 +3,7 @@ scalar URL
 type Message{
     id : ID!
     content : String!
-    createdAT : Date!
+    createdAt : Date!
 }
 
 type Chat {
@@ -17,4 +17,8 @@ type Chat {
 type Query {
     chats : [Chat!]!
     chat(chatId : ID!): Chat
+}
+
+type Mutation{
+    addMessage(chatId : ID!, content : String!) : Message
 }
