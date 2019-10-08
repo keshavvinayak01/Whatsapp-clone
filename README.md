@@ -1,5 +1,7 @@
 # A WhatsApp like messaging Web Application
 
+[![ForTheBadge uses-js](http://ForTheBadge.com/images/badges/uses-js.svg)](http://ForTheBadge.com) [![ForTheBadge built-with-love](http://ForTheBadge.com/images/badges/built-with-love.svg)](https://GitHub.com/Naereen/)
+
 ## Stack used :
 
 1. React/Redux
