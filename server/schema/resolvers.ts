@@ -1,4 +1,4 @@
-import { DateTimeResolver, URLResolver } from 'graphql-scalars';
+ import { DateTimeResolver, URLResolver } from 'graphql-scalars';
 import { Message, chats, messages } from '../db';
 import { Resolvers } from '../types/graphql';
 
@@ -29,7 +29,7 @@ const resolvers: Resolvers = {
   },
 
   Mutation: {
-    addMessage(root, { chatId, content }) {
+    addMessage(root, { chatId, content }, { pubsub }) {
       const chatIndex = chats.findIndex(c => c.id === chatId);
 
       if (chatIndex === -1) return null;
@@ -50,7 +50,18 @@ const resolvers: Resolvers = {
       chats.splice(chatIndex, 1);
       chats.unshift(chat);
 
+      pubsub.publish('messageAdded', {
+        messageAdded: message,
+      });
+
       return message;
+    },
+  },
+
+  Subscription: {
+    messageAdded: {
+      subscribe: (root, args, { pubsub }) =>
+        pubsub.asyncIterator('messageAdded'),
     },
   },
 };
