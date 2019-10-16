@@ -1,56 +1,58 @@
 import { DateTimeResolver, URLResolver } from 'graphql-scalars';
-import { chats, messages } from '../db';
+import { Message, chats, messages } from '../db';
+import { Resolvers } from '../types/graphql';
 
-const resolvers = {
-    Date : DateTimeResolver,
-    URL :URLResolver,
+const resolvers: Resolvers = {
+  Date: DateTimeResolver,
+  URL: URLResolver,
 
-    Chat : {
-        messages(chat : any){
-            return messages.filter(m => chat.messages.includes(m.id))
-        },
-
-        lastMessage(chat : any){
-            const lastMessage = chat.messages[chat.message.length - 1];
-
-            return messages.find(m => m.id === lastMessage)
-        },
-    },
-    
-    Query : {
-        chats(){
-            return chats;
-        },
-        
-        chat(root: any, { chatId } : any){
-            return chats.find(c => c.id === chatId);
-        },
+  Chat: {
+    messages(chat) {
+      return messages.filter(m => chat.messages.includes(m.id));
     },
 
-    Mutation : {
-        addMessage(root : any, {chatId, content} : any) {
-            const chatIndex = chats.findIndex(c => c.id === chatId);
-            if(chatIndex === -1) return null;
+    lastMessage(chat) {
+      const lastMessage = chat.messages[chat.messages.length - 1];
 
-            const chat = chats[chatIndex];
-
-            const messagesIds = messages.map(currentMessage => Number(currentMessage.id));
-            const messageId = String(Math.max(...messagesIds) + 1);
-            const message = {
-                id : messageId,
-                createdAt : new Date(),
-                content
-            };
-
-            messages.push(message);
-            chat.messages.push(messageId);
-            // The chat will appear at the top of the ChatList component
-            chats.splice(chatIndex, 1)
-            chats.unshift(chat);
-
-            return message;
-        },
+      return messages.find(m => m.id === lastMessage) || null;
     },
+  },
+
+  Query: {
+    chats() {
+      return chats;
+    },
+
+    chat(root, { chatId }) {
+      return chats.find(c => c.id === chatId) || null;
+    },
+  },
+
+  Mutation: {
+    addMessage(root, { chatId, content }) {
+      const chatIndex = chats.findIndex(c => c.id === chatId);
+
+      if (chatIndex === -1) return null;
+
+      const chat = chats[chatIndex];
+
+      const messagesIds = messages.map(currentMessage => Number(currentMessage.id));
+      const messageId = String(Math.max(...messagesIds) + 1);
+      const message: Message = {
+        id: messageId,
+        createdAt: new Date(),
+        content,
+      };
+
+      messages.push(message);
+      chat.messages.push(messageId);
+      // The chat will appear at the top of the ChatsList component
+      chats.splice(chatIndex, 1);
+      chats.unshift(chat);
+
+      return message;
+    },
+  },
 };
 
 export default resolvers;

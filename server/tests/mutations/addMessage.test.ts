@@ -5,9 +5,12 @@ import { resetDb } from '../../db';
 
 describe('Mutation.addMessage', () => {
   beforeEach(resetDb);
+
   it('should add message to specified chat', async () => {
     const server = new ApolloServer({ schema });
+
     const { query, mutate } = createTestClient(server);
+
     const addMessageRes = await mutate({
       variables: { chatId: '1', content: 'Hello World' },
       mutation: gql`
@@ -19,9 +22,11 @@ describe('Mutation.addMessage', () => {
         }
       `,
     });
+
     expect(addMessageRes.data).toBeDefined();
     expect(addMessageRes.errors).toBeUndefined();
     expect(addMessageRes.data).toMatchSnapshot();
+
     const getChatRes = await query({
       variables: { chatId: '1' },
       query: gql`
@@ -36,6 +41,7 @@ describe('Mutation.addMessage', () => {
         }
       `,
     });
+
     expect(getChatRes.data).toBeDefined();
     expect(getChatRes.errors).toBeUndefined();
     expect(getChatRes.data).toMatchSnapshot();

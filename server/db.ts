@@ -10,8 +10,10 @@ export type Chat = {
   picture: string;
   messages: string[];
 };
+
 export const messages: Message[] = [];
 export const chats: Chat[] = [];
+
 export const resetDb = () => {
   messages.splice(
     0,
@@ -45,6 +47,7 @@ export const resetDb = () => {
       },
     ]
   );
+
   chats.splice(
     0,
     Infinity,
@@ -76,4 +79,5 @@ export const resetDb = () => {
     ]
   );
 };
+
 resetDb();

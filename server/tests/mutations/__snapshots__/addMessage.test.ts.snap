@@ -1,4 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
+
 exports[`Mutation.addMessage should add message to specified chat 1`] = `
 Object {
   "addMessage": Object {
@@ -7,6 +8,7 @@ Object {
   },
 }
 `;
+
 exports[`Mutation.addMessage should add message to specified chat 2`] = `
 Object {
   "chat": Object {

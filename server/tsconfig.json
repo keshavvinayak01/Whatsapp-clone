@@ -1,11 +1,11 @@
 {
-    "compilerOptions": {
-        "target": "es2018",
-        "module": "commonjs",
-        "lib": [
-        "es2018",
-        "esnext.asynciterable"
-        ],
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "lib": [
+      "es2018",
+      "esnext.asynciterable"
+    ],
     "skipLibCheck": true,
     "strict": true,
     "strictFunctionTypes": false,
@@ -13,5 +13,8 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
-    }
+  },
+  "exclude": [
+    "./tests/"
+  ]
 }
