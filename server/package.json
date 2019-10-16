@@ -14,6 +14,9 @@
 	"author": "Keshav Vinayak Jha",
 	"license": "ISC",
 	"dependencies": {
+		"@graphql-codegen/cli": "^1.8.1",
+		"@graphql-codegen/typescript": "^1.8.1",
+		"@graphql-codegen/typescript-resolvers": "^1.8.1",
 		"@types/cors": "^2.8.6",
 		"@types/graphql": "^14.5.0",
 		"@types/jest": "^24.0.18",
