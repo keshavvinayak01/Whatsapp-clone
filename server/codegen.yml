@@ -6,7 +6,8 @@ generates:
       - typescript
       - typescript-resolvers
     config:
-      mappers:
+      contextType : ../context#MyContext
+      mappers:  
         # import { Message } from '../db'
         # The root types of Message resolvers
         Message: ../db#Message
