@@ -1,10 +1,16 @@
- import { DateTimeResolver, URLResolver } from 'graphql-scalars';
+import { DateTimeResolver, URLResolver } from 'graphql-scalars';
 import { Message, chats, messages } from '../db';
 import { Resolvers } from '../types/graphql';
 
 const resolvers: Resolvers = {
   Date: DateTimeResolver,
   URL: URLResolver,
+
+  Message: {
+    chat(message) {
+      return chats.find(c => c.messages.some(m => m === message.id)) || null;
+    },
+  },
 
   Chat: {
     messages(chat) {
