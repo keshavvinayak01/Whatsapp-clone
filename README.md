@@ -22,7 +22,7 @@
 - [x] Routes for chat rooms
 - [x] GraphQL Mutations for sending messages
 - [x] Caching with apollo-client
-- [ ] GraphQL Code Generator
+- [x] GraphQL Code Generator
 - [ ] GraphQL Subscriptions
 - [ ] Users
 - [ ] Chat remove/add
