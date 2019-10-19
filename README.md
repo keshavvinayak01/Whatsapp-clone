@@ -23,7 +23,7 @@
 - [x] GraphQL Mutations for sending messages
 - [x] Caching with apollo-client
 - [x] GraphQL Code Generator
-- [ ] GraphQL Subscriptions
+- [x] GraphQL Subscriptions
 - [ ] Users
 - [ ] Chat remove/add
 - [ ] Authentication
