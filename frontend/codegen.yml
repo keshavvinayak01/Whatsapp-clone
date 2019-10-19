@@ -1,4 +1,4 @@
-schema: ../WhatsApp-Clone-Server/schema/typeDefs.graphql
+schema: ../server/schema/typeDefs.graphql
 documents: './src/**/*.{tsx,ts}'
 overwrite: true
 generates:
