@@ -4,6 +4,9 @@ export default gql`
   fragment Message on Message {
     id
     createdAt
-    content
+    content,
+    chat{
+      id
+    }
   }
 `;
