@@ -4,7 +4,8 @@ scalar URL
 type Message {
   id: ID!
   content: String!
-  createdAt: Date!
+  createdAt: Date!,
+  chat : Chat
 }
 
 type Chat {
