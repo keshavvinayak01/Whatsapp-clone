@@ -7,9 +7,9 @@ import ChatNavbar from './ChatNavbar';
 import MessageInput from './MessageInput';
 import MessagesList from './MessagesList';
 import { History } from 'history';
-import { ChatsQuery, useGetChatQuery, useAddMessageMutation } from '../../graphql/types';
-import * as queries from '../../graphql/queries';
+import { useGetChatQuery, useAddMessageMutation } from '../../graphql/types';
 import * as fragments from '../../graphql/fragments';
+import { writeMessage } from '../../services/cache.service';
 
 const Container = styled.div`
   background: url(/assets/chat-background.jpg);
@@ -43,9 +43,6 @@ interface ChatRoomScreenParams {
   history: History;
 }
 
-interface ChatsResult {
-  chats: any[];
-}
 
 const ChatRoomScreen: React.FC<ChatRoomScreenParams> = ({
   history,
@@ -57,96 +54,36 @@ const ChatRoomScreen: React.FC<ChatRoomScreenParams> = ({
 
 const [addMessage] = useAddMessageMutation();
 
-  const onSendMessage = useCallback(
-    (content: string) => {
-      if (data === undefined) {
-        return null;
-      }
-      const chat = data.chat;
-      if (chat === null) return null;
+const onSendMessage = useCallback(
+  (content: string) => {
+    if (data === undefined) {
+      return null;
+    }
+    const chat = data.chat;
+    if (chat === null) return null;
 
-      addMessage({
-        variables: { chatId, content },
-        optimisticResponse: {
-          __typename: 'Mutation',
-          addMessage: {
-            __typename: 'Message',
-            id: Math.random()
-              .toString(36)
-              .substr(2, 9),
-            createdAt: new Date(),
-            content,
-          },
+    addMessage({
+      variables: { chatId, content },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        addMessage: {
+          __typename: 'Message',
+          id: Math.random()
+            .toString(36)
+            .substr(2, 9),
+          createdAt: new Date(),
+          content,
         },
-        update: (client, { data }) => {
-          if (data && data.addMessage) {
-            type FullChat = { [key: string]: any };
-            let fullChat;
-            const chatIdFromStore = defaultDataIdFromObject(chat);
-
-            if (chatIdFromStore === null) {
-              return;
-            }
-            try {
-              fullChat = client.readFragment<FullChat>({
-                id: chatIdFromStore,
-                fragment: fragments.fullChat,
-                fragmentName: 'FullChat',
-              });
-            } catch (e) {
-              return;
-            }
-
-            if (fullChat === null || fullChat.messages === null) {
-              return;
-            }
-            if (fullChat.messages.some((currentMessage: any) => 
-              data.addMessage && currentMessage.id === data.addMessage.id)){
-              return;
-            }
-  
-            fullChat.messages.push(data.addMessage);
-            fullChat.lastMessage = data.addMessage;
-  
-            client.writeFragment({
-              id: chatIdFromStore,
-              fragment: fragments.fullChat,
-              fragmentName: 'FullChat',
-              data: fullChat,
-            });            
-
-            let clientChatsData: ChatsQuery | null;
-            try {
-              clientChatsData = client.readQuery({
-                query: queries.chats,
-              });
-            } catch (e) {
-              return;
-            }
-  
-            if (!clientChatsData || !clientChatsData.chats) {
-              return null;
-            }
-            const chats = clientChatsData.chats;
-
-            const chatIndex = chats.findIndex((currentChat: any) => currentChat.id === chatId);
-            if (chatIndex === -1) return;
-            const chatWhereAdded = chats[chatIndex];
-
-            // The chat will appear at the top of the ChatsList component
-            chats.splice(chatIndex, 1);
-            chats.unshift(chatWhereAdded);
-  
-            client.writeQuery({
-              query: queries.chats,
-              data: { chats: chats },
-            });
-          }
-        },
-      });
-    },
-    [data, chatId, addMessage]
-  );
+      },
+      update: (client, { data }) => {
+        if (data && data.addMessage) {
+          writeMessage(client, data.addMessage);
+        }
+      },
+    });
+  },
+  [data, chatId, addMessage]
+);
 
   if (data === undefined) {
     return null;
