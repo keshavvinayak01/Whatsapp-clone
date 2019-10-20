@@ -3,6 +3,7 @@ import http from 'http';
 import cors from 'cors';
 import express from 'express';
 import schema from './schema';
+import { users } from './db';
 
 const app = express();
 
@@ -17,7 +18,10 @@ const pubsub = new PubSub();
 
 const server = new ApolloServer({
   schema,
-  context : () => ({ pubsub }),
+  context : () => ({
+    currentUser : users.find(u => u.id === '1'),
+    pubsub 
+  }),
 });
 
 server.applyMiddleware({
