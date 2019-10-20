@@ -2,6 +2,7 @@ import { ApolloServer, gql, PubSub } from 'apollo-server-express';
 import http from 'http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import cookie from 'cookies';
 import express from 'express';
 import schema from './schema';
 import { users } from './db';
@@ -20,10 +21,31 @@ const pubsub = new PubSub();
 
 const server = new ApolloServer({
   schema,
-  context : () => ({
-    currentUser : users.find(u => u.id === '1'),
-    pubsub 
-  }),
+  context : (session : any) => {
+    // Access the request object
+    let req = session.connection
+    ? session.connection.context.request
+    : session.req;
+
+    // It's subscription
+    if(session.connection) {
+      req.cookies = cookie.parse(req.headers.cookie || '');
+    }
+
+    return {
+      currentUser : users.find(u => u.id === req.cookies.currentUserId),
+      pubsub
+    };
+  },
+  
+  subscriptions : {
+    onConnect(params, ws, ctx) {
+      //  pass the request object to context
+      return {
+        request : ctx.request,
+      };
+    },
+  },
 });
 
 server.applyMiddleware({
