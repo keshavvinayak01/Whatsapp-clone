@@ -7,9 +7,9 @@ describe('Query.chat', () => {
   it('should fetch specified chat', async () => {
     const server = new ApolloServer({
        schema,
-       context : () => {
+       context : () => ({
          currentUser : users[0],
-       },
+       }),
     });
 
     const { query } = createTestClient(server);
