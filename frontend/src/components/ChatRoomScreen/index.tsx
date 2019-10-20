@@ -71,6 +71,7 @@ const onSendMessage = useCallback(
           id: Math.random()
             .toString(36)
             .substr(2, 9),
+          isMine : true,
           createdAt: new Date(),
           chat: {
             __typename: 'Chat',
