@@ -7,7 +7,8 @@ import { users } from './db';
 
 const app = express();
 
-app.use(cors());
+const origin = process.env.ORIGIN || 'http://localhost:3000';
+app.use(cors({ credentials: true, origin }));
 app.use(express.json());
 
 app.get('/_ping', (req, res) => {
@@ -27,6 +28,7 @@ const server = new ApolloServer({
 server.applyMiddleware({
   app,
   path: '/graphql',
+  cors : { credentials : true, origin },
 });
 
 const httpServer = http.createServer(app);
