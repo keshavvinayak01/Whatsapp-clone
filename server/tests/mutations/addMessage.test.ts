@@ -9,7 +9,10 @@ describe('Mutation.addMessage', () => {
   it('should add message to specified chat', async () => {
     const server = new ApolloServer({
       schema,
-      context : () => ({ pubsub : new PubSub() }),
+      context : () => ({
+         pubsub : new PubSub(),
+         currentUser : users[0]; 
+      }),
     })
     const { query, mutate } = createTestClient(server);
 
