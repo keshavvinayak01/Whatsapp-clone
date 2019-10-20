@@ -19,7 +19,6 @@ const App: React.FC = () => {
       <AnimatedSwitch>
         <Route exact path="/sign-(in|up)" component={AuthScreen} />
         <Route exact path="/chats" component={ChatsListScreen} />
-
         <Route
           exact
           path="/chats/:chatId"
