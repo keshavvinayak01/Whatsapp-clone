@@ -23,7 +23,7 @@ type Chat {
   picture: URL
   lastMessage: Message
   messages: [Message!]!
-  participants : [User!]!G
+  participants : [User!]!
 }
 
 type Query {
@@ -39,4 +39,5 @@ type Mutation {
 
 type Subscription {
   messageAdded : Message!
+  chatAdded : Chat!
 }
