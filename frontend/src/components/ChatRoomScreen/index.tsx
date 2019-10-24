@@ -2,6 +2,7 @@ import { defaultDataIdFromObject } from 'apollo-cache-inmemory';
 import gql from 'graphql-tag';
 import React from 'react';
 import { useCallback } from 'react';
+import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import ChatNavbar from './ChatNavbar';
 import MessageInput from './MessageInput';
@@ -98,6 +99,10 @@ const onSendMessage = useCallback(
 
   if (loadingChat) return null;
   if (chat === null) return null;
+
+  if(!chat){
+    return <Redirect to="/chats" />;
+  }
 
   return (
     <Container>
