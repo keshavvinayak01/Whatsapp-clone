@@ -24,8 +24,8 @@
 - [x] Caching with apollo-client
 - [x] GraphQL Code Generator
 - [x] GraphQL Subscriptions
-- [ ] Users
-- [ ] Chat remove/add
+- [x] Users
+- [x] Chat remove/add
 - [ ] Authentication
 - [ ] Migrating to PostgreSQL
 - [ ] Trying out REST APIs instead
