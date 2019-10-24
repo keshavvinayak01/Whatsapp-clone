@@ -38,7 +38,7 @@ export const UsersListQuery = gql`
     ${fragments.user}
 `;
 
-const UsersList : React.FC = () => {
+export const UsersList : React.FC = () => {
     const { data, loading: loadingUsers } = useUsersListQuery();
 
     if(data === undefined) return null;
