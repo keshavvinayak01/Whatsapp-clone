@@ -154,7 +154,7 @@ const resolvers: Resolvers = {
       return chat;
     },
 
-    removeChat(root, { chatId }, { currentUser }) {
+    removeChat(root, { chatId }, { currentUser, pubsub }) {
       if(!currentUser) return;
       const chatIndex = chats.findIndex(c => c.id === chatId);
       if(chatIndex === -1) return null;
@@ -171,6 +171,11 @@ const resolvers: Resolvers = {
       });
 
       chats.splice(chatIndex, 1);
+
+      pubsub.publish('chatRemoved', {
+        chatRemoved : chat.id,
+        targetChat : chat,
+      });
       return chatId;
     }
   },
@@ -199,6 +204,17 @@ const resolvers: Resolvers = {
         }
       ),
     },
+    
+    chatRemoved : {
+      subscribe : withFilter(
+        (root, args, { pubsub }) => pubsub.asyncIterator('chatRemoved'), 
+        ({ targetChat } : {targetChat : Chat}, args, { currentUser }) => {
+          if(!currentUser) return false;
+
+          return targetChat.participants.some(p => p === currentUser.id);
+        }
+      )
+    }
   },
 };
 
