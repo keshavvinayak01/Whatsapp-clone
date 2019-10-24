@@ -3,7 +3,7 @@ import { defaultDataIdFromObject } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import * as fragments from '../graphql/fragments';
 import * as queries from '../graphql/queries';
-import { MessageFragment, useMessageAddedSubscription, ChatFragment, useChatAddedSubscription } from '../graphql/types';
+import { MessageFragment, useMessageAddedSubscription, ChatFragment, useChatAddedSubscription, useChatRemovedSubsciption } from '../graphql/types';
 
 type Client = ApolloClient<any> | DataProxy ;
 
@@ -23,6 +23,14 @@ export const useCacheService = () => {
             }
         },
     });
+
+    useChatRemovedSubsciption({
+        onSubscriptionData: ({ client, subscriptionData : { data }}) => {
+            if(data) {
+                eraseChat(client, data.chatRemoved);
+            }
+        },
+    })
 };
 
 export const writeMessage = (client : Client, message : MessageFragment) => {
@@ -133,5 +141,50 @@ export const writeChat = (client : Client, chat : ChatFragment) => {
     client.writeQuery({
         query : queries.chats,
         data : { chats },
+    });
+};
+
+export const eraseChat = (client: Client, chatId : string) => {
+    const chatType = {
+        __typename : "Chat",
+        id : chatId
+    };
+
+    const chatIdFromObject = defaultDataIdFromObject(chatType);
+
+    if(chatIdFromObject === null) return;
+    
+    client.writeFragment({
+        id : chatIdFromObject,
+        fragment : fragments.fullChat,
+        fragmentName : 'FullChat',
+        data : null
+    });
+
+    let data;
+
+    try {
+        data = client.readQuery({
+            query : queries.chats,
+
+        });
+    }
+    catch(e) {
+        return;
+    }
+
+    if(!data || !data.chats) return;
+
+    const chats = data.chats;
+
+    const chatIndex = chats.findIndex((c : any) => c.id === chatId);
+
+    if(chatIndex === -1) return;
+
+    chats.splice(chatIndex, -1);
+
+    client.writeQuery({
+        query : queries.chats,
+        data : { chats : chats },
     });
 };
