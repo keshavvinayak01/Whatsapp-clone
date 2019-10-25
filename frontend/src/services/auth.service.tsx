@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 import { Redirect } from 'react-router-dom';
 import { useCacheService } from './cache.service';
-
+import { useSignInMutation } from '../graphql/types';
 
 export const withAuth = <P extends object>(
     Component : React.ComponentType<P>
@@ -22,12 +22,7 @@ export const withAuth = <P extends object>(
     };
 };
 
-export const signIn = ( authToken : string) => {
-    document.cookie = `authToken=${authToken}`;
-
-    // This will become async in the near future
-    return Promise.resolve();
-}
+export const useSignIn = useSignInMutation;
 
 export const useSignOut = () => {
     const client = useApolloClient();
