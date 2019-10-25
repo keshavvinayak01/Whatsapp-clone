@@ -4,8 +4,8 @@ import cookie from 'cookies';
 import schema from './schema';
 import { users } from './db';
 import { app } from './app';
-import { origin, port } from './env';
-
+import { origin, port, secret } from './env';
+import jwt from 'jsonwebtoken';
 
 
 const pubsub = new PubSub();
@@ -23,8 +23,14 @@ const server = new ApolloServer({
       req.cookies = cookie.parse(req.headers.cookie || '');
     }
 
+    let currentUser;
+    if(req.cookies.authToken) {
+      const username = jwt.verify(req.cookies.authToken, secret) as string;
+      currentUser = username && users.find(u => u.username === username);
+    }
+
     return {
-      currentUser : users.find(u => u.id === req.cookies.currentUserId),
+      currentUser,
       pubsub,
       res : session.res,
     };
