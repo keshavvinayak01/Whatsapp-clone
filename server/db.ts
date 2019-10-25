@@ -2,6 +2,8 @@ export type User = {
   id: string;
   name: string;
   picture: string;
+  username : string;
+  password : string;
 };
 
 export type Message = {
@@ -31,26 +33,36 @@ export const resetDb = () => {
         id: '1',
         name: 'Ray Edwards',
         picture: 'https://randomuser.me/api/portraits/thumb/lego/1.jpg',
+        username : 'ray',
+        password : '$2a$08$NO9tkFLCoSqX1c5wk3s7z.JfxaVMKA.m7zUDdDwEquo4rvzimQeJm'
       },
       {
         id: '2',
         name: 'Ethan Gonzalez',
         picture: 'https://randomuser.me/api/portraits/thumb/men/1.jpg',
+        username : 'ethan',
+        password : '$2a$08$xE4FuCi/ifxjL2S8CzKAmuKLwv18ktksSN.F3XYEnpmcKtpbpeZgO'
       },
       {
         id: '3',
         name: 'Bryan Wallace',
         picture: 'https://randomuser.me/api/portraits/thumb/men/2.jpg',
+        username : 'bryan',
+        password : '$2a$08$UHgH7J8G6z1mGQn2qx2kdeWv0jvgHItyAsL9hpEUI3KJmhVW5Q1d.'
       },
       {
         id: '4',
         name: 'Avery Stewart',
         picture: 'https://randomuser.me/api/portraits/thumb/women/1.jpg',
+        username : 'avery',
+        password : '$2a$08$wR1k5Q3T9FC7fUgB7Gdb9Os/GV7dGBBf4PLlWT7HERMFhmFDt47xi'
       },
       {
         id: '5',
         name: 'Katie Peterson',
         picture: 'https://randomuser.me/api/portraits/thumb/women/2.jpg',
+        username : 'katie',
+        password : '$2a$08$6.mbXqsDX82ZZ7q5d8Osb..JrGSsNp4R3IKj7mxgF6YGT0OmMw242',
       },
     ]
   );
