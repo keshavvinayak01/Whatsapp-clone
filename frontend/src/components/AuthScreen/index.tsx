@@ -2,7 +2,7 @@ import MaterialButton from '@material-ui/core/Button';
 import MaterialTextField from '@material-ui/core/TextField';
 import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
-import { signIn } from '../../services/auth.service';
+import { useSignIn } from '../../services/auth.service';
 import { RouteComponentProps, Route } from 'react-router-dom';
 
 const Container = styled.div`
@@ -113,21 +113,35 @@ const Button = styled(MaterialButton)`
 `;
 
 const AuthScreen : React.FC<RouteComponentProps<any>> = ({ history }) => {
-    const [ userId, setUserId ] = useState('');
-    
-    const onUserIdChange = useCallback(({ target }) => {
-        setUserId(target.value);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    // es-lint-disable-next-line
+    const [error, setError] = useState('');
+    const [signIn] = useSignIn();
+
+    const onUsernameChange = useCallback(({ target }) => {
+        setError('');
+        setUsername(target.value);
+    }, []);
+
+    const onPasswordChange = useCallback(({ target }) => {
+        setError('');
+        setPassword(target.value);
     }, []);
 
     const maySignIn = useCallback(() => {
-        return !!userId;
-    }, [userId]);
+        return !!(username && password);
+    }, [username ,password]);
 
     const handleSignIn = useCallback(() => {
-        signIn(userId).then(() => {
-            history.replace('/chats');
-        });
-    }, [userId, history]);
+        signIn({variables : { username, password }})
+            .then(() => {
+                history.push('/chats');
+            })
+            .catch(error => {
+                setError(error.message || error);
+            })
+    }, [username, password, signIn]);
 
     return (
         <Container>
@@ -140,12 +154,21 @@ const AuthScreen : React.FC<RouteComponentProps<any>> = ({ history }) => {
                     <Legend>Sign in</Legend>
                     <Section>
                         <TextField
-                        data-testid="user-id-input"
-                        label="User ID"
-                        value={userId}
-                        onChange={onUserIdChange}
+                        className="AuthScreen-text-field"
+                        label="Username"
+                        value={username}
+                        onChange={onUsernameChange}
                         margin="normal"
-                        placeholder="Enter current user ID"
+                        placeholder="Enter your username"
+                        />
+                        <TextField
+                        className="AuthScreen-text-field"
+                        label="Password"
+                        type="password"
+                        value={password}
+                        onChange={onPasswordChange}
+                        margin="normal"
+                        placeholder="Enter your password"
                         />
                     </Section>
                     <Button
