@@ -25,7 +25,8 @@ const server = new ApolloServer({
 
     return {
       currentUser : users.find(u => u.id === req.cookies.currentUserId),
-      pubsub
+      pubsub,
+      res : session.res,
     };
   },
   

@@ -2,6 +2,9 @@ import { withFilter } from 'apollo-server-express';
 import { DateTimeResolver, URLResolver } from 'graphql-scalars';
 import { User, Message, Chat, chats, messages, users } from '../db';
 import { Resolvers } from '../types/graphql';
+import { secret, expiration } from '../env';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const resolvers: Resolvers = {
   Date: DateTimeResolver,
@@ -92,6 +95,22 @@ const resolvers: Resolvers = {
   },
 
   Mutation: {
+
+    signIn(root, { username, password }, { res }){
+      const user = users.find(u => u.username === username);
+      if(!user) throw new Error('User not found');
+
+      const passwordsMatch = bcrypt.compareSync(password, user.password);
+
+      if(!passwordsMatch) throw new Error('Password is incorrect');
+
+      const authToken = jwt.sign(username, secret);
+
+      res.cookie('authToken', authToken, { maxAge : expiration });
+
+      return user;
+    },
+
     addMessage(root, { chatId, content }, { currentUser, pubsub }) {
       if (!currentUser) return null;
 
@@ -177,7 +196,7 @@ const resolvers: Resolvers = {
         targetChat : chat,
       });
       return chatId;
-    }
+    },
   },
 
   Subscription: {
