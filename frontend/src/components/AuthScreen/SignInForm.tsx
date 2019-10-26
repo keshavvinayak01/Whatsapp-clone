@@ -2,8 +2,8 @@ import React from 'react';
 import { useCallback, useState } from 'react';
 import { useSignIn } from '../../services/auth.service';
 import {
-    SignInForm,
-    AcutalForm,
+    SignForm,
+    ActualForm,
     Legend,
     Section,
     TextField,
@@ -15,7 +15,7 @@ import { RouteComponentProps } from 'react-router-dom';
 const SignInForm : React.FC<RouteComponentProps<any>> = ({ history }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = userState('');
+    const [error, setError] = useState('');
     const [signIn] = useSignIn();
 
     const onUsernameChange = useCallback(({ target }) => {
@@ -43,7 +43,7 @@ const SignInForm : React.FC<RouteComponentProps<any>> = ({ history }) => {
     }, [username, password, history, signIn]);
 
     return (
-        <SignInForm>
+        <SignForm>
             <ActualForm>
                 <Legend>Sign In</Legend>
                 <Section style={{ width : '100%'}}>
@@ -75,9 +75,9 @@ const SignInForm : React.FC<RouteComponentProps<any>> = ({ history }) => {
                 >
                 Sign In
                 </Button>
-                <ErrorMesage data-testid="error-message">{error}</ErrorMesage>
+                <ErrorMessage data-testid="error-message">{error}</ErrorMessage>
             </ActualForm>
-        </SignInForm>    
+        </SignForm>    
     );
 };
 export default SignInForm;
