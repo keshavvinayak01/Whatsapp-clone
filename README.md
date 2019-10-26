@@ -26,7 +26,7 @@
 - [x] GraphQL Subscriptions
 - [x] Users
 - [x] Chat remove/add
-- [ ] Authentication
+- [x] Authentication
 - [ ] Migrating to PostgreSQL
 - [ ] Trying out REST APIs instead
 - [ ] Modularity
