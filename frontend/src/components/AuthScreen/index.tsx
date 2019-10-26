@@ -1,12 +1,13 @@
-import MaterialButton from '@material-ui/core/Button';
-import MaterialTextField from '@material-ui/core/TextField';
-import React, { useCallback, useState } from 'react';
+import React from 'react';
+import { useMemo } from 'react';
+import { Route } from 'react-router-dom';
+import AnimatedSwitch from '../AnimatedSwitch';
+import SignInForm from './SignInForm';
+import SignUpForm from './SignUpForm';
 import styled from 'styled-components';
-import { useSignIn } from '../../services/auth.service';
-import { RouteComponentProps, Route } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 
 const Container = styled.div`
-    height : 100%;
     background : radial-gradient(rgb(34, 65, 67), rgb(17, 48, 50)),
         url(/assets/chat-background.jpg) no-repeat;
     background-size : cover;
@@ -40,151 +41,54 @@ const Alternative = styled.div`
     bottom : 10px;
     left : 10px;
 
-    a {
+    label {
         color : var(--secondary-bg);
     }
 `;
 
-const SignInForm = styled.form`
-    height : calc(100% - 265px);
-`;
 
-const AcutalForm = styled.form`
-    padding : 20px;
-`;
 
-const Section = styled.div`
-    width : 100%;
-    padding-bottom : 35px;
-`;
-
-const Legend = styled.legend`
-    font-weight : bold;
-    color : white;
-`
-
-// eslint-disable-next-line
-const Label = styled.label`
-    color : white!important;
-` ;
-
-// eslint-disable-next-ling
-const Input = styled.input`
-    color : white;
-
-    &::placeholder {
-        color : var(--primary-bg);
-    }
-`;
-
-const TextField = styled(MaterialTextField)`
-    width : 100%;
-    position : relative;
-
-    > div::before{
-        border-color : white !important;
-    }
-
-    input { 
-        color : white !important;
-    
-    &::placeholder {
-        color : var(--primary-bg) !important;
+const AuthScreen : React.FC<RouteComponentProps<any>> = ({ history, location }) => {
+    const alternative = useMemo(() => {
+        if(location.pathname === '/sign-in') {
+            const handleSignUp = () => {
+                history.replace('/sign-up');
+            };
+            return (
+                <Alternative>
+                    Don't have an account yet?{' '}
+                    <label onClick={handleSignUp}>Sign Up!</label>
+                </Alternative>
+            );
         }
-    }
-    label {
-        color : white !important;
-    }
-`;
+        else {
+            const handleSignIn = () => {
+                history.replace('/sign-in');
+            };
 
-const Button = styled(MaterialButton)`
-    width : 100px;
-    display : block !important;
-    margin : auto !important;
-    background-color : var(--secondary-bg) !important;
-
-    &[disabled] {
-        color : #38a81c;
-    }
-
-    &:not[disabled] {
-        color : white;
-    }
-`;
-
-const AuthScreen : React.FC<RouteComponentProps<any>> = ({ history }) => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    // es-lint-disable-next-line
-    const [error, setError] = useState('');
-    const [signIn] = useSignIn();
-
-    const onUsernameChange = useCallback(({ target }) => {
-        setError('');
-        setUsername(target.value);
-    }, []);
-
-    const onPasswordChange = useCallback(({ target }) => {
-        setError('');
-        setPassword(target.value);
-    }, []);
-
-    const maySignIn = useCallback(() => {
-        return !!(username && password);
-    }, [username ,password]);
-
-    const handleSignIn = useCallback(() => {
-        signIn({variables : { username, password }})
-            .then(() => {
-                history.push('/chats');
-            })
-            .catch(error => {
-                setError(error.message || error);
-            })
-    }, [username, password, signIn]);
+            return (
+                <Alternative>
+                    Already have an account? 
+                    <label onClick={handleSignIn}>Sign In!</label>
+                </Alternative>
+            );
+        }
+    }, [location.pathname, history]);
 
     return (
-        <Container>
-            <Intro>
+        <Container className="AuthScreen Screen">
+            <Intro className="AuthScreen-intro">
                 <Icon src="assets/whatsapp-icon.png" className="AuthScreen-icon" />
-                <Title className = "AuthScreen-title">WhatsApp</Title>
+                <Title className="AuthScreen-title">WhatsApp</Title>
             </Intro>
-            <SignInForm>
-                <AcutalForm>
-                    <Legend>Sign in</Legend>
-                    <Section>
-                        <TextField
-                        className="AuthScreen-text-field"
-                        label="Username"
-                        value={username}
-                        onChange={onUsernameChange}
-                        margin="normal"
-                        placeholder="Enter your username"
-                        />
-                        <TextField
-                        className="AuthScreen-text-field"
-                        label="Password"
-                        type="password"
-                        value={password}
-                        onChange={onPasswordChange}
-                        margin="normal"
-                        placeholder="Enter your password"
-                        />
-                    </Section>
-                    <Button
-                    data-testid="sign-in-button"
-                    type="button"
-                    color="secondary"
-                    variant="contained"
-                    disabled={!maySignIn()}
-                    onClick={handleSignIn}
-                    >
-                    Sign In
-                    </Button>
-                </AcutalForm>
-            </SignInForm>
+            <AnimatedSwitch>
+                <Route exact path="/sign-in" component={SignInForm} />
+                <Route exact path="/sign-up" component={SignUpForm} />
+            </AnimatedSwitch>
+            {alternative}
         </Container>
-    );
+    )
+
 };
 
 export default AuthScreen;
