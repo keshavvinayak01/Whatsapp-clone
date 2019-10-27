@@ -27,7 +27,7 @@
 - [x] Users
 - [x] Chat remove/add
 - [x] Authentication
-- [ ] Migrating to PostgreSQL
+- [x] Migrating to PostgreSQL
 - [ ] Trying out REST APIs instead
 - [ ] Modularity
 - [ ] Performance
