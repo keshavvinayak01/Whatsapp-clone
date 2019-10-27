@@ -1,18 +1,27 @@
 import { createTestClient } from 'apollo-server-testing';
 import { ApolloServer, gql, PubSub } from 'apollo-server-express';
 import schema from '../../schema';
-import { resetDb } from '../../db';
+import { resetDb, pool } from '../../db';
+import sql from 'sql-template-strings';
+import { MyContext } from '../../context';
 
 describe('Mutation.addMessage', () => {
   beforeEach(resetDb);
 
   it('should add message to specified chat', async () => {
+    const { rows } = await pool.query(sql`select * from users where id = 1`);
+    const currentUser = rows[0]
     const server = new ApolloServer({
       schema,
-      context : () => ({
+      context : async () => ({
          pubsub : new PubSub(),
-         currentUser : users[0]; 
+         currentUser,
+         db : await pool.connect(), 
       }),
+      formatResponse : (res : any, { context } : { context : MyContext}) => {
+        context.db.release();
+        return res;
+      }
     })
     const { query, mutate } = createTestClient(server);
 
