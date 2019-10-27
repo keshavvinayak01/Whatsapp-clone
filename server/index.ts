@@ -1,4 +1,4 @@
-import { ApolloServer, gql, PubSub } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import http from 'http';
 import cookie from 'cookies';
 import schema from './schema';
@@ -8,9 +8,15 @@ import { origin, port, secret } from './env';
 import { MyContext } from './context';
 import sql from 'sql-template-strings';
 import jwt from 'jsonwebtoken';
+const { PostgresPubSub } = require('graphql-postgres-subscriptions');
 
-
-const pubsub = new PubSub();
+const pubsub = new PostgresPubSub({
+  host : 'localhost',
+  port : process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432,
+  user : 'postgres',
+  password : 'test123',
+  database : 'whatsapp'
+})
 
 const server = new ApolloServer({
   schema,
