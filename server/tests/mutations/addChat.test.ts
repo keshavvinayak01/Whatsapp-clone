@@ -1,18 +1,27 @@
 import { createTestClient } from 'apollo-server-testing';
 import { ApolloServer, PubSub, gql } from 'apollo-server-express';
 import schema from '../../schema';
-import { resetDb, users } from '../../db';
+import { resetDb, pool, dbConfig } from '../../db';
+import sql from 'sql-template-strings';
+import { MyContext } from '../../context';
 
 describe('Mutation.addChat', () => {
     beforeEach(resetDb);
 
     it('creates a new chat betweem current user and specified recipient', async () => {
+        const { rows } = await pool.query(sql`select * from users where id = 2`);
+        const currentUser = rows[0];
         const server = new ApolloServer({
             schema,
-            context : () => ({
+            context : async () => ({
                 pubsub : new PubSub(),
-                currentUser : users[1],
+                currentUser,
+                db : await pool.connect(),
             }),
+            formatResponse : ( res : any, { context }, : { context : MyContext}) => {
+                context.db.release();
+                return res;
+            }
         });
 
         const { query, mutate } = createTestClient(server);
@@ -58,12 +67,19 @@ describe('Mutation.addChat', () => {
     });
 
     it('returns the existing chat if so', async () => {
+        const { rows } = await pool.query(sql` select * from users where id = 1`);
+        const currentUser = rows[0];
         const server = new ApolloServer({
           schema,
-          context: () => ({
+          context: async () => ({
             pubsub: new PubSub(),
-            currentUser: users[0],
+            currentUser,
+            db : await pool.connect()
           }),
+          formatResponse : (res : any, { context } : { context : MyContext}) => {
+              context.db.release();
+              return res;
+          }
         });
 
         const { query, mutate } = createTestClient(server);
