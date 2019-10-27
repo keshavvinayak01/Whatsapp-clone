@@ -12,14 +12,12 @@ export type Message = {
   id: string;
   content: string;
   createdAt: Date;
-  sender: string;
-  recipient: string;
+  chat_id: string;
+  sender_user_id: string;
 };
 
 export type Chat = {
   id: string;
-  messages: string[];
-  participants: string[];
 };
 
 export const dbConfig = {
