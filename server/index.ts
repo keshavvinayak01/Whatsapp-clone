@@ -2,9 +2,11 @@ import { ApolloServer, gql, PubSub } from 'apollo-server-express';
 import http from 'http';
 import cookie from 'cookies';
 import schema from './schema';
-import { users } from './db';
+import { pool } from './db';
 import { app } from './app';
 import { origin, port, secret } from './env';
+import { MyContext } from './context';
+import sql from 'sql-template-strings';
 import jwt from 'jsonwebtoken';
 
 
@@ -12,7 +14,7 @@ const pubsub = new PubSub();
 
 const server = new ApolloServer({
   schema,
-  context : (session : any) => {
+  context : async (session : any) => {
     // Access the request object
     let req = session.connection
     ? session.connection.context.request
@@ -26,13 +28,24 @@ const server = new ApolloServer({
     let currentUser;
     if(req.cookies.authToken) {
       const username = jwt.verify(req.cookies.authToken, secret) as string;
-      currentUser = username && users.find(u => u.username === username);
+      if (username) {
+        const { rows } = await pool.query(
+          sql`select * from users where username=${username}`
+        );
+        currentUser = rows[0];
+      }
+    }
+
+    let db;
+    if(!session.connection) {
+      db = await pool.connect();
     }
 
     return {
       currentUser,
       pubsub,
       res : session.res,
+      db
     };
   },
   
@@ -43,6 +56,10 @@ const server = new ApolloServer({
         request : ctx.request,
       };
     },
+  },
+  formatResponse :(res : any, { context } : { context : MyContext }) => {
+    context.db.release();
+    return res;
   },
 });
 
